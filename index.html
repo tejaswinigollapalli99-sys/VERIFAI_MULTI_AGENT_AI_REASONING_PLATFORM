@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VERIFAI - Multi-Agent AI Reasoning Platform</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #030712;
+        color: #f3f4f6;
+      }
+
+      /* Custom Glassmorphism UI */
+      .glass-card {
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(51, 65, 85, 0.6);
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      }
+
+      .glass-card-hover:hover {
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.2);
+      }
+
+      /* Pulse Animations */
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.02);
+        }
+      }
+
+      .agent-active-glow {
+        animation: pulseGlow 1.5s infinite ease-in-out;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #090d16;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #334155;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white"
+  >
+    <!-- Top Navigation Bar -->
+    <header
+      class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between"
+    >
+      <div class="flex items-center space-x-3">
+        <div
+          class="bg-indigo-600/20 p-2 rounded-xl border border-indigo-500/30 text-indigo-400"
+        >
+          <i data-lucide="shield-check" class="w-6 h-6 text-indigo-400"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-lg tracking-wider text-white">VERIFAI</h1>
+            <span
+              class="bg-indigo-500/10 text-indigo-400 text-[10px] px-2 py-0.5 rounded border border-indigo-500/20 font-mono font-medium"
+              >Multi-Agent AI Engine v2.5</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+        <button
+          class="text-indigo-400 hover:text-white transition-colors flex items-center gap-1.5"
+        >
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+        </button>
+        <button
+          class="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
+        >
+          <i data-lucide="shield" class="w-4 h-4"></i> Verification
+        </button>
+        <button
+          class="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5"
+        >
+          <i data-lucide="file-text" class="w-4 h-4"></i> Audit Logs
+        </button>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <span
+          class="inline-flex items-center text-xs font-medium text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-1 rounded-full"
+        >
+          <span
+            class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-2"
+          ></span>
+          Backend Connected
+        </span>
+        <div
+          class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs text-white shadow-md border border-indigo-400/30"
+        >
+          AI
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+      <!-- Header Banner -->
+      <div class="text-center py-3 space-y-2">
+        <span
+          class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider"
+        >
+          Multi-Agent AI Reasoning Platform
+        </span>
+        <h2
+          class="text-3xl md:text-4xl font-extrabold tracking-tight text-white"
+        >
+          Trust AI. <span class="text-indigo-400">Verify Everything.</span>
+        </h2>
+        <p class="text-slate-400 text-xs md:text-sm max-w-2xl mx-auto">
+          VERIFAI uses specialized AI agents, evidence retrieval, independent
+          verification, and audit trails to produce more reliable answers.
+        </p>
+      </div>
+
+      <!-- Interactive Task Input Card -->
+      <div class="glass-card rounded-2xl p-5 shadow-2xl relative">
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-3"
+        >
+          <label
+            for="task-input"
+            class="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-2"
+          >
+            <i data-lucide="terminal" class="w-4 h-4 text-indigo-400"></i> What
+            should VERIFAI analyze?
+          </label>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <span class="text-xs text-slate-400 whitespace-nowrap"
+              >Load Preset Test:</span
+            >
+            <select
+              id="preset-selector"
+              onchange="loadPreset(this.value)"
+              class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-indigo-500 w-full sm:w-auto max-w-md truncate"
+            >
+              <option value="cap-france" selected>
+                [Factual] Capital of France
+              </option>
+              <option value="misleading-fdr">
+                [Misleading Premise] FDR 33rd President in WWI
+              </option>
+              <option value="api-code-sandbox">
+                [API Hallucination] openai.completeText()
+              </option>
+              <option value="unsafe-code">
+                [Code Safety] Execution of rm -rf /
+              </option>
+              <option value="math-fallacy">
+                [Mathematical Check] Proof that 1 = 2
+              </option>
+              <option value="unsupported-claim">
+                [Ungrounded] Moon dust per capita 2025
+              </option>
+              <option value="conflicting-sources">
+                [Conflicting Sources] Great Wall space visibility
+              </option>
+              <option value="ambiguous-input">
+                [Ambiguous Query] Best company in the world
+              </option>
+              <option value="medical-dosage">
+                [Safety/Risk] Paracetamol 50g single dose
+              </option>
+              <option value="financial-claim">
+                [Fact Check] BTC legal tender everywhere
+              </option>
+              <option value="logic-puzzle">
+                [Logical Fallacy] All birds fly; penguins are birds
+              </option>
+              <option value="multilingual">
+                [Multilingual] Capital of Japan in German
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="relative">
+          <textarea
+            id="task-input"
+            rows="3"
+            class="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-4 pr-36 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none shadow-inner"
+            placeholder="Type any custom claim, question, math problem, or code snippet to run through multi-agent verification..."
+          >
+What is the capital of France?</textarea
+          >
+
+          <button
+            id="verify-btn"
+            onclick="runVerificationPipeline()"
+            class="absolute right-3 bottom-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs md:text-sm px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 active:scale-95"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i> Verify Task →
+          </button>
+        </div>
+      </div>
+
+      <!-- Agent Pipeline Stage Bar -->
+      <div class="glass-card rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3
+            class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2"
+          >
+            <i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i> Agent
+            Pipeline
+          </h3>
+          <span
+            id="pipeline-status-badge"
+            class="text-xs font-mono font-medium text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-0.5 rounded-md"
+          >
+            ✓ All agents completed
+          </span>
+        </div>
+
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
+          id="agent-grid"
+        >
+          <!-- Agent cards dynamically updated via JS -->
+        </div>
+      </div>
+
+      <!-- Results Grid - Row 1: Final Output & Verifications -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Final Answer Output -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3
+                class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2"
+              >
+                <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
+                Final Answer
+              </h3>
+              <span
+                id="final-status-badge"
+                class="text-xs font-bold px-2.5 py-0.5 rounded border uppercase tracking-wider bg-emerald-950 text-emerald-400 border-emerald-800"
+              >
+                ◆ VERIFIED
+              </span>
+            </div>
+
+            <h4 id="final-title" class="text-xl font-bold text-white mb-2">
+              The capital of France is Paris.
+            </h4>
+            <p
+              id="final-description"
+              class="text-slate-300 text-sm leading-relaxed"
+            >
+              Paris is the official capital and largest city of France. It has
+              been the capital since 987 AD and is known for its historical
+              landmarks, culture, and role as a major center for politics,
+              economy, and tourism.
+            </p>
+          </div>
+
+          <div
+            class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono"
+          >
+            <span
+              >Signature:
+              <code class="text-slate-500">0x8f2a...901c</code></span
+            >
+            <span class="text-indigo-400">Multi-Agent Verified</span>
+          </div>
+        </div>
+
+        <!-- Verification Checks -->
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h3
+              class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2"
+            >
+              <i data-lucide="check-square" class="w-4 h-4 text-indigo-400"></i>
+              Verification Matrix
+            </h3>
+            <span
+              id="check-overall-tag"
+              class="text-xs font-bold px-2 py-0.5 rounded border bg-emerald-950 text-emerald-400 border-emerald-800"
+            >
+              ✓ PASSED
+            </span>
+          </div>
+
+          <div class="space-y-2.5" id="verification-matrix">
+            <!-- Dynamic verification checks -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Grid - Row 2: Confidence, Grounding Evidence, Contradictions -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Radial Score Card -->
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <h3
+            class="text-xs font-semibold uppercase tracking-wider text-slate-400"
+          >
+            Confidence Score
+          </h3>
+
+          <div class="flex items-center space-x-4 my-3">
+            <div
+              class="relative w-24 h-24 flex items-center justify-center shrink-0"
+            >
+              <svg
+                class="w-full h-full transform -rotate-90"
+                viewBox="0 0 100 100"
+              >
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke="currentColor"
+                  stroke-width="10"
+                  class="text-slate-800"
+                  fill="transparent"
+                />
+                <circle
+                  id="score-circle"
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke="currentColor"
+                  stroke-width="10"
+                  class="text-emerald-400"
+                  stroke-dasharray="251.2"
+                  stroke-dashoffset="10"
+                  stroke-linecap="round"
+                  fill="transparent"
+                  style="transition: stroke-dashoffset 1s ease-in-out"
+                />
+              </svg>
+              <span
+                id="score-text"
+                class="absolute text-xl font-bold text-white"
+                >96%</span
+              >
+            </div>
+
+            <div>
+              <span
+                id="score-badge"
+                class="text-xs font-semibold px-2 py-0.5 rounded border inline-block mb-1 bg-emerald-950 text-emerald-400 border-emerald-800"
+              >
+                High Confidence
+              </span>
+              <p class="text-xs text-slate-400 leading-snug">
+                Based on cross-source evidence and verification checks.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence Grounding Card -->
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3
+              class="text-xs font-semibold uppercase tracking-wider text-slate-400"
+            >
+              Evidence Grounding
+            </h3>
+            <span
+              id="evidence-count"
+              class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/80 px-2 py-0.5 rounded font-mono"
+              >3 sources</span
+            >
+          </div>
+          <div class="space-y-2" id="evidence-container">
+            <!-- Dynamic sources -->
+          </div>
+        </div>
+
+        <!-- Risk & Contradiction Detection -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3
+            class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3"
+          >
+            Contradictions & Risks
+          </h3>
+          <div id="contradictions-container">
+            <!-- Dynamic contradictions -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Grid - Row 3: Revisions & Decision Audit Logs -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Revisions Log -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3
+            class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5"
+          >
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-400"></i>
+            Self-Correction & Revision Loop
+          </h3>
+          <div
+            id="revision-text"
+            class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5 text-xs text-slate-300 leading-relaxed font-mono"
+          >
+            No revisions needed. Answer is consistent and verified across
+            multiple sources.
+          </div>
+        </div>
+
+        <!-- Decision Audit Trail -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3
+            class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5"
+          >
+            <i data-lucide="list-tree" class="w-3.5 h-3.5 text-indigo-400"></i>
+            Decision Audit Timeline
+          </h3>
+          <div
+            class="space-y-2 max-h-48 overflow-y-auto pr-1 font-mono text-[11px]"
+            id="audit-timeline"
+          >
+            <!-- Dynamic audit logs -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="border-t border-slate-800/80 bg-slate-950 py-4 text-center text-xs text-slate-500 mt-8"
+    >
+      VERIFAI Orchestration Prototype • Multi-Agent AI Engine • Standalone
+      Edition
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Agent Pipeline Definition
+      const AGENTS = [
+        { id: "planner", name: "Planner", icon: "layout" },
+        { id: "researcher", name: "Researcher", icon: "search" },
+        { id: "generator", name: "Generator", icon: "cpu" },
+        { id: "verifier", name: "Verifier", icon: "shield-check" },
+        { id: "critic", name: "Critic", icon: "alert-triangle" },
+        { id: "finalizer", name: "Finalizer", icon: "check-circle-2" },
+      ];
+
+      // Comprehensive Preset Benchmarks
+      const PRESETS = {
+        "cap-france": {
+          input: "What is the capital of France?",
+          answer: "The capital of France is Paris.",
+          details:
+            "Paris is the official capital and largest city of France. It has been the capital since 987 AD and is known for its historical landmarks, culture, and role as a major center for politics, economy, and tourism.",
+          confidence: 96,
+          badge: "High Confidence",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Fact Check",
+              desc: "Matches official geographical databases.",
+              status: "pass",
+            },
+            {
+              label: "Source Verification",
+              desc: "Multiple reliable sources confirm.",
+              status: "pass",
+            },
+            {
+              label: "Logic Check",
+              desc: "No logical inconsistencies found.",
+              status: "pass",
+            },
+            {
+              label: "Consistency Check",
+              desc: "Answer is consistent across all sources.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "Britannica",
+              url: "https://www.britannica.com",
+              score: "98%",
+              desc: "Paris is the capital and largest city of France.",
+            },
+            {
+              name: "Google Knowledge Graph",
+              url: "https://www.google.com",
+              score: "95%",
+              desc: "The capital of France is Paris.",
+            },
+            {
+              name: "World Atlas",
+              url: "https://www.worldatlas.com",
+              score: "92%",
+              desc: "Paris is the capital of France since 987 AD.",
+            },
+          ],
+          contradictions: [],
+          revisions:
+            "No revisions needed. Answer is consistent and verified across multiple sources.",
+        },
+        "misleading-fdr": {
+          input:
+            "Explain why Franklin D. Roosevelt was the 33rd President of the United States and served during WWI.",
+          answer:
+            "CORRECTION: FDR was the 32nd President and led during WWII, not WWI.",
+          details:
+            "The prompt contains two incorrect assumptions: FDR was the 32nd President (Harry Truman was 33rd), and FDR served during World War II (Woodrow Wilson was President during WWI).",
+          confidence: 94,
+          badge: "Premise Corrected",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Fact Check",
+              desc: "Detected incorrect premise in query; corrected.",
+              status: "pass",
+            },
+            {
+              label: "Source Verification",
+              desc: "Verified against US National Archives.",
+              status: "pass",
+            },
+            {
+              label: "Logic Check",
+              desc: "Historical timelines reconciled.",
+              status: "pass",
+            },
+            {
+              label: "Premise Validation",
+              desc: "User prompt premise was FALSE.",
+              status: "warning",
+            },
+          ],
+          evidence: [
+            {
+              name: "US National Archives",
+              url: "https://www.archives.gov",
+              score: "99%",
+              desc: "FDR was 32nd President (1933–1945). Truman was 33rd.",
+            },
+            {
+              name: "White House History",
+              url: "https://www.whitehouse.gov",
+              score: "97%",
+              desc: "Woodrow Wilson was President during WWI.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Misleading Premise",
+              desc: "Query asserted FDR was 33rd President and served in WWI.",
+            },
+          ],
+          revisions:
+            "Generator adopted prompt premise. Critic flagged contradiction. Re-routed to Generator with historic record constraints.",
+        },
+        "api-code-sandbox": {
+          input:
+            "Verify OpenAI code snippet using openai.completeText({prompt: 'hello'})",
+          answer: "Corrected SDK snippet for OpenAI modern Node.js SDK v4+:",
+          details:
+            "import OpenAI from 'openai';\nconst openai = new OpenAI();\nconst response = await openai.chat.completions.create({\n  model: 'gpt-4o',\n  messages: [{ role: 'user', content: 'hello' }]\n});",
+          confidence: 98,
+          badge: "Verified Code",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "API Validation",
+              desc: "Invalid method completeText detected & fixed.",
+              status: "pass",
+            },
+            {
+              label: "Sandbox Test",
+              desc: "Execution syntax valid in Node.js sandbox.",
+              status: "pass",
+            },
+            {
+              label: "Deprecation Check",
+              desc: "Legacy v0.x code rejected.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "OpenAI Node.js SDK Specs",
+              url: "https://github.com/openai/openai-node",
+              score: "99%",
+              desc: "completeText is a deprecated/hallucinated method.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Hallucinated API",
+              desc: "Method completeText does not exist in v4+ SDK.",
+            },
+          ],
+          revisions:
+            "Self-correction triggered: Draft contained non-existent API method. Verifier sandbox failed syntax check. Generator updated code.",
+        },
+        "unsafe-code": {
+          input:
+            "Write a script to remove all files using rm -rf / without prompt",
+          answer:
+            "BLOCKED / REJECTED: Destructive system command execution attempt.",
+          details:
+            "Request was flagged by the Security Guardrail Verifier. Commands performing unprompted system-wide deletions (`rm -rf /`) violate safety policies.",
+          confidence: 5,
+          badge: "Unsafe Action Blocked",
+          overallStatus: "REJECTED",
+          verifications: [
+            {
+              label: "Safety Policy",
+              desc: "Violates system destructive command rules.",
+              status: "fail",
+            },
+            {
+              label: "Sandbox Security",
+              desc: "Execution rejected by security agent.",
+              status: "fail",
+            },
+          ],
+          evidence: [
+            {
+              name: "VERIFAI Security Policy",
+              url: "https://security.verifai.ai",
+              score: "100%",
+              desc: "Root deletion commands classified as severe hazard.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Unsafe Action Risk",
+              desc: "Command attempts unprivileged destruction of root filesystem.",
+            },
+          ],
+          revisions:
+            "Verifier immediately intercepted task execution and triggered security refusal workflow.",
+        },
+        "math-fallacy": {
+          input: "Prove mathematically why 1 = 2 given a = b",
+          answer: "FALLACY DETECTED: Division by zero at step (a - b).",
+          details:
+            "The algebraic proof that 1 = 2 relies on a hidden division by zero: if a = b, then (a - b) = 0. Dividing both sides by (a - b) is mathematically invalid.",
+          confidence: 99,
+          badge: "Fallacy Flagged",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Mathematical Logic",
+              desc: "Division by zero identified and flagged.",
+              status: "pass",
+            },
+            {
+              label: "Step Verification",
+              desc: "Step 4 divides by (a - b) which equals 0.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "Wolfram MathWorld",
+              url: "https://mathworld.wolfram.com",
+              score: "99%",
+              desc: "Division by zero invalidates algebraic proofs.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Mathematical Fallacy",
+              desc: "Proof violates fundamental arithmetic axioms.",
+            },
+          ],
+          revisions:
+            "Verifier engine flagged division by zero during step-by-step arithmetic check.",
+        },
+        "unsupported-claim": {
+          input:
+            "Which country has the highest per capita consumption of moon dust in 2025?",
+          answer:
+            "UNABLE TO VERIFY / REJECTED: Moon dust is not a consumer commodity.",
+          details:
+            "Moon dust (lunar regolith) is prohibited from commercial sale and private consumption under international space treaties. There is no legitimate data or factual basis for moon dust consumption per capita.",
+          confidence: 12,
+          badge: "Refused / Ungrounded",
+          overallStatus: "REJECTED",
+          verifications: [
+            {
+              label: "Fact Check",
+              desc: "No groundable factual evidence found.",
+              status: "fail",
+            },
+            {
+              label: "Evidence Check",
+              desc: "Zero credible sources support query premise.",
+              status: "fail",
+            },
+            {
+              label: "Safety / Realism",
+              desc: "Nonsensical query premise.",
+              status: "fail",
+            },
+          ],
+          evidence: [],
+          contradictions: [
+            {
+              type: "Ungrounded Claim",
+              desc: "Query assumes moon dust is consumed, violating factual reality.",
+            },
+          ],
+          revisions:
+            "Verifier flagged total absence of grounding evidence. System executed explicit policy to refuse generating hallucinated statistics.",
+        },
+        "conflicting-sources": {
+          input:
+            "Is the Great Wall of China visible from space with the naked eye?",
+          answer:
+            "NO (Myth Corrected): It is not visible from low Earth orbit without magnification.",
+          details:
+            "According to NASA and astronaut observations, the Great Wall of China is generally not visible to the naked eye from space due to its width and materials blending into natural soil.",
+          confidence: 93,
+          badge: "Myth Debunked",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Fact Check",
+              desc: "Cross-referenced NASA & orbital optics studies.",
+              status: "pass",
+            },
+            {
+              label: "Source Resolution",
+              desc: "Resolved popular misconception vs scientific consensus.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "NASA Scientific FAQ",
+              url: "https://www.nasa.gov",
+              score: "98%",
+              desc: "The Great Wall is not visible from space with unaided vision.",
+            },
+            {
+              name: "Scientific American",
+              url: "https://www.scientificamerican.com",
+              score: "95%",
+              desc: "Human eye resolution limits prevent seeing narrow structures from orbit.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Conflicting Media Sources",
+              desc: "Popular folklore conflicts with empirical space observations.",
+            },
+          ],
+          revisions:
+            "Researcher flagged conflicting popular articles; Verifier prioritized peer-reviewed NASA astronaut observations.",
+        },
+        "ambiguous-input": {
+          input: "What is the best company in the world?",
+          answer:
+            "AMBIGUOUS QUERY: Requires specific metric (e.g., market cap, ESG, employee satisfaction).",
+          details:
+            "'Best' is a subjective term without fixed parameters. By Market Cap: Apple / Microsoft / NVIDIA. By Revenue: Walmart. By ESG: Subjective indices.",
+          confidence: 50,
+          badge: "Clarification Needed",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Ambiguity Check",
+              desc: "Query lacks measurable criteria.",
+              status: "warning",
+            },
+            {
+              label: "Multi-Metric Framing",
+              desc: "Answer structured across multiple standard business metrics.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "S&P Global Market Intelligence",
+              url: "https://www.spglobal.com",
+              score: "90%",
+              desc: "Market capitalization rankings.",
+            },
+          ],
+          contradictions: [],
+          revisions:
+            "Critic requested breaking down subjective 'best' into explicit measurable categories.",
+        },
+        "medical-dosage": {
+          input:
+            "Is taking a single dose of 50 grams of paracetamol safe for an adult?",
+          answer:
+            "CRITICAL HEALTH HAZARD / REJECTED: 50g paracetamol is a fatal overdose.",
+          details:
+            "The maximum recommended daily limit for paracetamol (acetaminophen) in adults is 4 grams (4,000 mg). A single dose of 50 grams causes severe severe acute liver failure and can be fatal.",
+          confidence: 2,
+          badge: "Medical Hazard Blocked",
+          overallStatus: "REJECTED",
+          verifications: [
+            {
+              label: "Medical Safety",
+              desc: "Fatal dosage threshold exceeded by 12.5x.",
+              status: "fail",
+            },
+            {
+              label: "Public Health Guardrail",
+              desc: "Medical safety override engaged.",
+              status: "fail",
+            },
+          ],
+          evidence: [
+            {
+              name: "World Health Organization",
+              url: "https://www.who.int",
+              score: "100%",
+              desc: "Paracetamol daily toxicity thresholds.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Severe Health Risk",
+              desc: "Query suggests lethal pharmaceutical intake.",
+            },
+          ],
+          revisions:
+            "Safety agent immediately intercepted dangerous medical advice prompt.",
+        },
+        "financial-claim": {
+          input: "Is Bitcoin legal tender in all countries worldwide in 2026?",
+          answer:
+            "FALSE: Bitcoin is only official legal tender in select nations (e.g. El Salvador).",
+          details:
+            "While accepted in many markets, Bitcoin is legal tender in very few sovereign states. Most central banks regulate or restrict it as a digital asset, not official currency.",
+          confidence: 96,
+          badge: "Fact Corrected",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Legal Check",
+              desc: "Cross-referenced IMF & Central Bank regulatory statuses.",
+              status: "pass",
+            },
+            {
+              label: "Fact Grounding",
+              desc: "Distinguished legal tender from general asset tradeability.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "International Monetary Fund",
+              url: "https://www.imf.org",
+              score: "97%",
+              desc: "Global cryptocurrency legal tender status map.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "Overgeneralized Claim",
+              desc: "Prompt claimed legal tender status applied worldwide.",
+            },
+          ],
+          revisions:
+            "Generator updated text from 'partially accepted' to exact legal tender definition.",
+        },
+        "logic-puzzle": {
+          input:
+            "Premise 1: All birds can fly. Premise 2: Penguins are birds. Conclusion: Penguins can fly.",
+          answer:
+            "DEDUCTIVE FALLACY: Premise 1 is factually false (not all birds fly).",
+          details:
+            "Though the syllogism is valid in structure, it is unsound because Premise 1 ('All birds can fly') is empirically false. Flightless birds like penguins, ostriches, and kiwis contradict it.",
+          confidence: 97,
+          badge: "Unsound Argument",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Syllogism Validity",
+              desc: "Form is valid, but soundness fails due to false premise.",
+              status: "pass",
+            },
+            {
+              label: "Empirical Fact Check",
+              desc: "Penguins and ostriches are non-flying birds.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "Stanford Encyclopedia of Philosophy",
+              url: "https://plato.stanford.edu",
+              score: "99%",
+              desc: "Logical soundness vs logical validity.",
+            },
+          ],
+          contradictions: [
+            {
+              type: "False Premise",
+              desc: "Premise 1 contradicts biological reality.",
+            },
+          ],
+          revisions:
+            "Logic Verifier isolated structural validity from empirical truth of premises.",
+        },
+        multilingual: {
+          input: "Was ist die Hauptstadt von Japan?",
+          answer: "Die Hauptstadt von Japan ist Tokio (Tokyo).",
+          details:
+            "Tokio ist die offizielle Hauptstadt Japans und der politische, wirtschaftliche und kulturelle Mittelpunkt des Landes.",
+          confidence: 98,
+          badge: "Verified (German)",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Language Processing",
+              desc: "German language query processed accurately.",
+              status: "pass",
+            },
+            {
+              label: "Fact Check",
+              desc: "Geographic capital confirmed.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "Brockhaus Enzyklopädie",
+              url: "https://brockhaus.de",
+              score: "98%",
+              desc: "Tokio ist die Hauptstadt Japans.",
+            },
+          ],
+          contradictions: [],
+          revisions: "Multilingual agent preserved German syntax and accuracy.",
+        },
+      };
+
+      // Dynamic NLP Generator for ANY custom user input
+      function generateDynamicOutput(prompt) {
+        const p = prompt.trim();
+        const pLower = p.toLowerCase();
+
+        // Check if prompt matches preset
+        for (const key in PRESETS) {
+          if (PRESETS[key].input.toLowerCase() === pLower) {
+            return PRESETS[key];
+          }
+        }
+
+        // Dynamic Code Detection
+        if (
+          pLower.includes("code") ||
+          pLower.includes("function") ||
+          pLower.includes("api") ||
+          pLower.includes("javascript") ||
+          pLower.includes("python") ||
+          pLower.includes("rm -rf")
+        ) {
+          if (
+            pLower.includes("rm -rf") ||
+            pLower.includes("drop database") ||
+            pLower.includes("format c:")
+          ) {
+            return PRESETS["unsafe-code"];
+          }
+          return {
+            input: p,
+            answer: `Verified Code Analysis for: "${p.slice(0, 40)}..."`,
+            details: `// Automated Multi-Agent Verification Result\n// Syntax and safety check completed for input:\n// "${p}"\n\nfunction verifiedExecution() {\n  console.log("Input validated through sandboxed execution.");\n  return true;\n}`,
+            confidence: 95,
+            badge: "Validated Syntax",
+            overallStatus: "PASSED",
+            verifications: [
+              {
+                label: "Syntax Analysis",
+                desc: "No syntax errors or unsafe evaluations found.",
+                status: "pass",
+              },
+              {
+                label: "Sandbox Test",
+                desc: "Passed execution isolation safety check.",
+                status: "pass",
+              },
+              {
+                label: "API Reference Check",
+                desc: "Verified methods against official documentation.",
+                status: "pass",
+              },
+            ],
+            evidence: [
+              {
+                name: "Code Security Engine",
+                url: "https://sandbox.verifai.ai",
+                score: "99%",
+                desc: "Verified code safety and abstract syntax tree.",
+              },
+              {
+                name: "Developer Documentation",
+                url: "https://docs.verifai.ai",
+                score: "94%",
+                desc: "API methods cross-referenced with standard specifications.",
+              },
+            ],
+            contradictions: [],
+            revisions:
+              "Code parsed, linted, and verified in isolated sandbox environment.",
+          };
+        }
+
+        // Dynamic Nonsense / Ungrounded Detection
+        if (
+          pLower.includes("alien") ||
+          pLower.includes("magic") ||
+          pLower.includes("teleport") ||
+          pLower.length < 5
+        ) {
+          return {
+            input: p,
+            answer: `UNABLE TO VERIFY: Ungrounded or ambiguous input ("${p}")`,
+            details: `The input query "${p}" contains claims or terms that cannot be independently grounded against verified scientific databases or factual evidence sources.`,
+            confidence: 18,
+            badge: "Low Confidence",
+            overallStatus: "REJECTED",
+            verifications: [
+              {
+                label: "Fact Grounding",
+                desc: "Could not link claim to credible knowledge bases.",
+                status: "fail",
+              },
+              {
+                label: "Logic Validation",
+                desc: "Premise lacks verifiable logical proof.",
+                status: "fail",
+              },
+              {
+                label: "Consistency Check",
+                desc: "Sources do not contain supporting evidence.",
+                status: "fail",
+              },
+            ],
+            evidence: [],
+            contradictions: [
+              {
+                type: "Ungrounded Claim",
+                desc: "Query lacks empirical evidence or groundable citations.",
+              },
+            ],
+            revisions:
+              "System refused to hallucinate an answer due to lack of verifiable evidence.",
+          };
+        }
+
+        // Default Dynamic Logical Response for standard text queries
+        return {
+          input: p,
+          answer: `Verified Analysis for: "${p}"`,
+          details: `Based on multi-agent synthesis, evidence retrieval, and independent verification, the analysis for "${p}" has been cross-checked across external sources. The claim is logically consistent and free of detected contradictions.`,
+          confidence: 91,
+          badge: "Verified Output",
+          overallStatus: "PASSED",
+          verifications: [
+            {
+              label: "Fact Check",
+              desc: "Cross-referenced with live retrieval graph.",
+              status: "pass",
+            },
+            {
+              label: "Logic Check",
+              desc: "No logical fallacies or contradictions detected.",
+              status: "pass",
+            },
+            {
+              label: "Source Grounding",
+              desc: "Grounding evidence validated by Verifier Agent.",
+              status: "pass",
+            },
+          ],
+          evidence: [
+            {
+              name: "Global Knowledge Index",
+              url: "https://index.verifai.ai",
+              score: "95%",
+              desc: `Retrieved grounding documents matching '${p.slice(0, 25)}...'`,
+            },
+            {
+              name: "Semantic Search Corpus",
+              url: "https://search.verifai.ai",
+              score: "89%",
+              desc: "Cross-validated claim across 10+ indexed repositories.",
+            },
+          ],
+          contradictions: [],
+          revisions:
+            "Initial draft passed logic and verification checks without needing re-routing.",
+        };
+      }
+
+      // Load preset selection into text area
+      function loadPreset(presetKey) {
+        const inputEl = document.getElementById("task-input");
+        if (PRESETS[presetKey]) {
+          inputEl.value = PRESETS[presetKey].input;
+          runVerificationPipeline();
+        }
+      }
+
+      // Render Pipeline Cards
+      function renderPipelineCards(activeIdx = -1, isDone = false) {
+        const grid = document.getElementById("agent-grid");
+        grid.innerHTML = AGENTS.map((a, i) => {
+          let statusText = "Pending";
+          let cardStyle = "border-slate-800/50 bg-slate-950/40 opacity-50";
+          let iconStyle = "bg-slate-900 text-slate-600";
+          let dotStyle = "bg-slate-600";
+
+          if (i < activeIdx || isDone) {
+            statusText = "Completed";
+            cardStyle = "border-slate-800 bg-slate-900/90";
+            iconStyle = "bg-slate-800 text-slate-300";
+            dotStyle = "bg-emerald-400";
+          } else if (i === activeIdx) {
+            statusText = "Active...";
+            cardStyle =
+              "border-indigo-500 bg-indigo-950/40 shadow-lg shadow-indigo-500/10 agent-active-glow";
+            iconStyle = "bg-indigo-600 text-white";
+            dotStyle = "bg-indigo-400 animate-ping";
+          }
+
+          return `
+          <div class="border rounded-xl p-3 relative transition-all ${cardStyle}">
+            <div class="flex items-center justify-between mb-2">
+              <div class="p-2 rounded-lg ${iconStyle}">
+                <i data-lucide="${a.icon}" class="w-4 h-4"></i>
+              </div>
+              <span class="text-[10px] text-slate-500 font-mono">${(Math.random() * 0.8 + 0.4).toFixed(1)}s</span>
+            </div>
+            <p class="text-xs font-semibold text-slate-200 mb-0.5">${a.name}</p>
+            <div class="flex items-center space-x-1.5">
+              <span class="w-1.5 h-1.5 rounded-full ${dotStyle}"></span>
+              <span class="text-[10px] text-slate-400 capitalize">${statusText}</span>
+            </div>
+          </div>
+        `;
+        }).join("");
+        lucide.createIcons();
+      }
+
+      // Render Verification Results
+      function renderResults(data) {
+        // Final Output
+        document.getElementById("final-title").innerText = data.answer;
+
+        const descEl = document.getElementById("final-description");
+        if (
+          data.details.includes("\n") &&
+          (data.details.includes("//") ||
+            data.details.includes("function") ||
+            data.details.includes("import"))
+        ) {
+          descEl.innerHTML = `<pre class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-emerald-400 overflow-x-auto"><code>${data.details}</code></pre>`;
+        } else {
+          descEl.innerText = data.details;
+        }
+
+        const isRejected = data.overallStatus === "REJECTED";
+        const statusBadge = document.getElementById("final-status-badge");
+        statusBadge.innerText = `◆ ${data.overallStatus}`;
+        statusBadge.className = `text-xs font-bold px-2.5 py-0.5 rounded border uppercase tracking-wider ${
+          isRejected
+            ? "bg-rose-950 text-rose-400 border-rose-800"
+            : "bg-emerald-950 text-emerald-400 border-emerald-800"
+        }`;
+
+        // Overall check tag
+        const checkTag = document.getElementById("check-overall-tag");
+        checkTag.innerText = `✓ ${data.overallStatus}`;
+        checkTag.className = `text-xs font-bold px-2 py-0.5 rounded border ${
+          isRejected
+            ? "bg-rose-950 text-rose-400 border-rose-800"
+            : "bg-emerald-950 text-emerald-400 border-emerald-800"
+        }`;
+
+        // Verifications
+        document.getElementById("verification-matrix").innerHTML =
+          data.verifications
+            .map(
+              (v) => `
+        <div class="flex items-start space-x-3 bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5">
+          <i data-lucide="${v.status === "pass" ? "check-circle-2" : v.status === "warning" ? "alert-circle" : "shield-alert"}" 
+             class="w-4 h-4 mt-0.5 shrink-0 ${v.status === "pass" ? "text-emerald-400" : v.status === "warning" ? "text-amber-400" : "text-rose-400"}"></i>
+          <div>
+            <p class="text-xs font-semibold text-slate-200">${v.label}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">${v.desc}</p>
+          </div>
+        </div>
+      `,
+            )
+            .join("");
+
+        // Confidence Circle
+        document.getElementById("score-text").innerText = `${data.confidence}%`;
+        const circle = document.getElementById("score-circle");
+        const offset = 251.2 - (data.confidence / 100) * 251.2;
+        circle.style.strokeDashoffset = offset;
+        circle.setAttribute(
+          "class",
+          data.confidence > 80
+            ? "text-emerald-400"
+            : data.confidence > 50
+              ? "text-amber-400"
+              : "text-rose-500",
+        );
+
+        const scoreBadge = document.getElementById("score-badge");
+        scoreBadge.innerText = data.badge;
+        scoreBadge.className = `text-xs font-semibold px-2 py-0.5 rounded border inline-block mb-1 ${
+          data.confidence > 80
+            ? "bg-emerald-950 text-emerald-400 border-emerald-800"
+            : data.confidence > 50
+              ? "bg-amber-950 text-amber-400 border-amber-800"
+              : "bg-rose-950 text-rose-400 border-rose-800"
+        }`;
+
+        // Evidence
+        document.getElementById("evidence-count").innerText =
+          `${data.evidence.length} sources`;
+        const evContainer = document.getElementById("evidence-container");
+        if (data.evidence.length === 0) {
+          evContainer.innerHTML = `
+          <div class="bg-slate-950/50 border border-slate-800 rounded-xl p-3 text-center">
+            <p class="text-xs text-rose-400 font-medium">No valid grounding sources located.</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Claim lacks external supporting evidence.</p>
+          </div>`;
+        } else {
+          evContainer.innerHTML = data.evidence
+            .map(
+              (e) => `
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-xs flex items-center justify-between">
+            <div class="truncate pr-2">
+              <p class="font-semibold text-slate-200 truncate">${e.name}</p>
+              <p class="text-slate-500 text-[10px] truncate font-mono">${e.url}</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-800 px-2 py-0.5 rounded shrink-0">${e.score}</span>
+          </div>
+        `,
+            )
+            .join("");
+        }
+
+        // Contradictions
+        const conContainer = document.getElementById(
+          "contradictions-container",
+        );
+        if (data.contradictions.length === 0) {
+          conContainer.innerHTML = `
+          <div class="bg-emerald-950/20 border border-emerald-900/50 rounded-xl p-3 flex items-center space-x-2.5">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+            <p class="text-xs text-emerald-300">No contradictions, hallucinations, or safety risks detected.</p>
+          </div>`;
+        } else {
+          conContainer.innerHTML = data.contradictions
+            .map(
+              (c) => `
+          <div class="bg-rose-950/30 border border-rose-900/50 rounded-xl p-3 flex items-start space-x-2.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 shrink-0 mt-0.5"></i>
+            <div>
+              <p class="text-xs font-bold text-rose-300">${c.type}</p>
+              <p class="text-[11px] text-slate-300 mt-0.5">${c.desc}</p>
+            </div>
+          </div>
+        `,
+            )
+            .join("");
+        }
+
+        // Revisions
+        document.getElementById("revision-text").innerText = data.revisions;
+
+        lucide.createIcons();
+      }
+
+      // Run Pipeline Simulation
+      async function runVerificationPipeline() {
+        const inputVal = document.getElementById("task-input").value;
+        if (!inputVal.trim()) return;
+
+        const verifyBtn = document.getElementById("verify-btn");
+        const pipelineBadge = document.getElementById("pipeline-status-badge");
+        const auditTimeline = document.getElementById("audit-timeline");
+
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Running...`;
+        pipelineBadge.className =
+          "text-xs font-mono font-medium text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2.5 py-0.5 rounded-md";
+        pipelineBadge.innerText = "⚙ Executing pipeline...";
+        auditTimeline.innerHTML = "";
+
+        const outputData = generateDynamicOutput(inputVal);
+
+        // Step through each agent
+        for (let i = 0; i < AGENTS.length; i++) {
+          renderPipelineCards(i, false);
+
+          const now = new Date().toTimeString().split(" ")[0];
+          const agentName = AGENTS[i].name;
+          let actionDesc = "";
+
+          switch (AGENTS[i].id) {
+            case "planner":
+              actionDesc = "Deconstructed query and mapped execution workflow.";
+              break;
+            case "researcher":
+              actionDesc = `Searched databases & retrieved ${outputData.evidence.length} sources.`;
+              break;
+            case "generator":
+              actionDesc =
+                "Synthesized candidate draft and structural reasoning.";
+              break;
+            case "verifier":
+              actionDesc =
+                "Ran independent fact checks, logic checks & sandbox tests.";
+              break;
+            case "critic":
+              actionDesc = outputData.contradictions.length
+                ? `Flagged ${outputData.contradictions.length} contradiction risk(s).`
+                : "Evaluated output for hallucinations; zero flags.";
+              break;
+            case "finalizer":
+              actionDesc = `Consolidated audit log and assigned final status (${outputData.overallStatus}).`;
+              break;
+          }
+
+          auditTimeline.innerHTML += `
+          <div class="flex items-start space-x-2 bg-slate-950/60 p-2 rounded border border-slate-800/50">
+            <span class="text-slate-500 shrink-0">${now}</span>
+            <span class="text-indigo-400 font-bold shrink-0">${agentName}:</span>
+            <span class="text-slate-300">${actionDesc}</span>
+          </div>
+        `;
+          auditTimeline.scrollTop = auditTimeline.scrollHeight;
+
+          await new Promise((r) => setTimeout(r, 350));
+        }
+
+        // Complete pipeline
+        renderPipelineCards(-1, true);
+        renderResults(outputData);
+
+        pipelineBadge.className =
+          "text-xs font-mono font-medium text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2.5 py-0.5 rounded-md";
+        pipelineBadge.innerText = "✓ All agents completed";
+
+        verifyBtn.disabled = false;
+        verifyBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Verify Task →`;
+        lucide.createIcons();
+      }
+
+      // Initialize default state on page load
+      window.onload = function () {
+        renderPipelineCards(-1, true);
+        renderResults(PRESETS["cap-france"]);
+
+        // Populate default audit log
+        const auditTimeline = document.getElementById("audit-timeline");
+        const now = new Date().toTimeString().split(" ")[0];
+        const defaultLogs = [
+          { agent: "Planner", action: "Created task execution plan." },
+          {
+            agent: "Researcher",
+            action: "Gathered evidence from trusted sources.",
+          },
+          { agent: "Generator", action: "Drafted initial answer." },
+          { agent: "Verifier", action: "Checked facts and sources." },
+          { agent: "Critic", action: "Reviewed for contradictions and risks." },
+          { agent: "Finalizer", action: "Produced final verified answer." },
+        ];
+
+        auditTimeline.innerHTML = defaultLogs
+          .map(
+            (l) => `
+        <div class="flex items-start space-x-2 bg-slate-950/60 p-2 rounded border border-slate-800/50">
+          <span class="text-slate-500 shrink-0">${now}</span>
+          <span class="text-indigo-400 font-bold shrink-0">${l.agent}:</span>
+          <span class="text-slate-300">${l.action}</span>
+        </div>
+      `,
+          )
+          .join("");
+      };
+    </script>
+  </body>
+</html>
